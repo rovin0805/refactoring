@@ -4,12 +4,13 @@ import plays from './plays.js';
 function statement(invoice, plays) {
   const statementData = {}; // 중간 데이터 구조
   statementData.customer = invoice.customer;
-  return renderPlaintext(statementData, invoice, plays);
+  statementData.performances = invoice.performances;
+  return renderPlaintext(statementData, plays);
 }
 
-function renderPlaintext(data, invoice, plays) {
+function renderPlaintext(data, plays) {
   let result = `청구 내역 (고객명: ${data.customer})\n`;
-  for (let perf of invoice.performances) {
+  for (let perf of data.performances) {
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${
       perf.audience
     }석)\n`;
@@ -20,16 +21,15 @@ function renderPlaintext(data, invoice, plays) {
 
   function totalAmount() {
     let result = 0;
-    for (let perf of invoice.performances) {
+    for (let perf of data.performances) {
       result += amountFor(perf);
     }
     return result;
   }
 
-  // 중첩 함수 시작
   function totalVolumeCredits() {
     let volumeCredits = 0;
-    for (let perf of invoice.performances) {
+    for (let perf of data.performances) {
       volumeCredits = volumeCreditsFor(perf);
     }
     return volumeCredits;
