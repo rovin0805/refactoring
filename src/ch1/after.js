@@ -2,11 +2,13 @@ import invoices from './invoices.js';
 import plays from './plays.js';
 
 function statement(invoice, plays) {
-  return renderPlaintext(invoice, plays);
+  const statementData = {}; // 중간 데이터 구조
+  statementData.customer = invoice.customer;
+  return renderPlaintext(statementData, invoice, plays);
 }
 
-function renderPlaintext(invoice, plays) {
-  let result = `청구 내역 (고객명: ${invoice.customer})\n`;
+function renderPlaintext(data, invoice, plays) {
+  let result = `청구 내역 (고객명: ${data.customer})\n`;
   for (let perf of invoice.performances) {
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${
       perf.audience
