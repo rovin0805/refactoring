@@ -21,7 +21,7 @@ function statement(invoice, plays) {
 function renderPlaintext(data, plays) {
   let result = `청구 내역 (고객명: ${data.customer})\n`;
   for (let perf of data.performances) {
-    result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${
+    result += ` ${perf.play.name}: ${usd(amountFor(perf))} (${
       perf.audience
     }석)\n`;
   }
@@ -56,18 +56,14 @@ function renderPlaintext(data, plays) {
   function volumeCreditsFor(aPerformance) {
     let result = 0;
     result += Math.max(aPerformance.audience - 30, 0);
-    if (playFor(aPerformance).type === 'comedy')
+    if (aPerformance.play.type === 'comedy')
       result += Math.floor(aPerformance.audience / 5);
     return result;
   }
 
-  function playFor(aPerformance) {
-    return plays[aPerformance.playID];
-  }
-
   function amountFor(aPerformance) {
     let result = 0;
-    switch (playFor(aPerformance).type) {
+    switch (aPerformance.play.type) {
       case 'tragedy':
         result = 40000;
         if (aPerformance.audience > 30) {
@@ -82,7 +78,7 @@ function renderPlaintext(data, plays) {
         result += 300 * aPerformance.audience;
         break;
       default:
-        throw new Error(`알 수 없는 장르 : ${playFor(aPerformance).type}`);
+        throw new Error(`알 수 없는 장르 : ${aPerformance.play.type}`);
     }
     return result;
   }
