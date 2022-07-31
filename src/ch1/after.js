@@ -1,7 +1,11 @@
 import invoices from './invoices.js';
 import plays from './plays.js';
 
-function statement(invoice) {
+function statement(invoice, plays) {
+  return renderPlaintext(invoice, plays);
+}
+
+function renderPlaintext(invoice, plays) {
   let result = `청구 내역 (고객명: ${invoice.customer})\n`;
   for (let perf of invoice.performances) {
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${
