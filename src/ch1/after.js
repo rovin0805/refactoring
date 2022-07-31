@@ -4,8 +4,18 @@ import plays from './plays.js';
 function statement(invoice, plays) {
   const statementData = {}; // 중간 데이터 구조
   statementData.customer = invoice.customer;
-  statementData.performances = invoice.performances;
+  statementData.performances = invoice.performances.map(enrichPerformance);
   return renderPlaintext(statementData, plays);
+
+  function enrichPerformance(aPerformance) {
+    const result = Object.assign({}, aPerformance); // 얕은 복사 수행
+    result.play = playFor(result);
+    return result;
+  }
+
+  function playFor(aPerformance) {
+    return plays[aPerformance.playID];
+  }
 }
 
 function renderPlaintext(data, plays) {
